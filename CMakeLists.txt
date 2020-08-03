@@ -9,8 +9,11 @@
 #
 # SPDX-License-Identifier: EPL-2.0 OR BSD-3-Clause
 #
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.15)
+cmake_policy(SET CMP0091 NEW)
+
 project(CycloneDDS VERSION 0.7.0 LANGUAGES C)
+
 if(CMAKE_VERSION VERSION_LESS 3.12)
   # GENERATE_EXPORT_HEADER requires a C++ compiler up to version 3.12
   enable_language(CXX)
@@ -31,6 +34,15 @@ endif()
 # just happens to generate a warning, as well as anyone adding or modifying something and making a
 # small mistake would run into errors.  CI builds can be configured differently.
 option(WERROR "Treat compiler warnings as errors" OFF)
+
+if (WIN32)
+  option(CYCLONE_STATIC_RUNTIME "Use the static MSVC runtime on Windows" OFF)
+  if (CYCLONE_STATIC_RUNTIME)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    else()
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL$<$<CONFIG:Debug>:Debug>")
+  endif()
+endif()
 
 FUNCTION(PREPEND var prefix)
    SET(listVar "")

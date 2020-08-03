@@ -97,7 +97,9 @@ if(WIN32 AND NOT UNIX)
   set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${CPACK_PACKAGE_VERSION}-${__arch}")
   set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME_FULL}")
 
-  include(InstallRequiredSystemLibraries)
+  if (NOT CYCLONE_STATIC_RUNTIME)
+    include(InstallRequiredSystemLibraries)
+  endif()
 elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
   # CMake prior to v3.6 messes up the name of the packages. >= v3.6 understands CPACK_RPM/DEBIAN_<component>_FILE_NAME
   cmake_minimum_required(VERSION 3.6)
